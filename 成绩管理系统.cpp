@@ -1,4 +1,4 @@
-﻿#pragma warning(disable:4996)
+#pragma warning(disable:4996)
 #include<stdio.h> 
 #include<stdlib.h>
 #include<string.h>
@@ -61,7 +61,7 @@ void DrawRec(int X, int Y, int w, int h);
 int main()
 {
 	system("color b0");//颜色参数 
-					   //welcome();
+	welcome();
 	creat_file_m();
 	creat_file();
 	menu_initial();
@@ -77,7 +77,7 @@ void gotoxy(int x, int y)
 }
 void DrawRec(int X, int Y, int w, int h)
 {
-	int i, j;
+	int i;
 	//到达x,y
 	gotoxy(X, Y);
 	//上边--------------------第一排
@@ -355,12 +355,23 @@ messages *creat_list_message()
 		printf("File opens error!\n");
 		exit(0);
 	}
-	rewind(fp);
-	while (!feof(fp))
+	//rewind(fp);
+	/*while (!feof(fp))
 	{
 		fscanf(fp, "%lld", &t.account);
 		fscanf(fp, "%s%s%s", t.password, t.name, t.identify);
 		q = (messages *)malloc(sizeof(messages));
+		q->account = t.account;
+		strcpy(q->password, t.password);
+		strcpy(q->name, t.name);
+		strcpy(q->identify, t.identify);
+		p->next = q;
+		p = q;
+	}*/
+	//p->next = NULL;
+	while (fread(&t, sizeof(t), 1, fp) != 0)
+	{
+		q = (message *)malloc(sizeof(message));
 		q->account = t.account;
 		strcpy(q->password, t.password);
 		strcpy(q->name, t.name);
@@ -383,9 +394,7 @@ void login()
 	int flag = 0;//判断是否登陆成功
 	h = creat_list_message();
 	ptr = h;
-	char ch;
 	long long account;
-	char password[20];
 	char a[10] = "老师";
 	char b[10] = "学生";
 	char c[20];//记录密码
@@ -500,8 +509,9 @@ void register_m()
 		system("pause");
 		menu_initial();
 	}
-	fprintf(fp, "%lld %s %s %s", t.account, t.password, t.name, t.identify);
-	fprintf(fp, "\n");
+	//fprintf(fp, "%lld %s %s %s", t.account, t.password, t.name, t.identify);
+	//fprintf(fp, "\n");
+	fwrite(&t, sizeof(t), 1, fp);
 	if (fclose(fp))
 	{
 		printf("file close error!\n");
@@ -606,7 +616,6 @@ void add_student()//录入学生信息
 		int k = 1;//控制课程输出
 		int r = 1;
 		double sum = 0;
-		int count;//储存课程的序号 
 		system("cls");
 		printf("\n\n\n\n\n");
 		for (int i = 1; i <= 9; i++)
@@ -695,8 +704,7 @@ void print_stu_all()//打印所有学生成绩
 	if (ptr->next != NULL)
 	{
 		system("cls");
-		printf("\n\n\n\n\n\n\n学号\t\t姓名\t学期\t性别");
-		int count;//储存课程的序号 
+		printf("\n\n\n\n\n\n\n学号\t\t姓名\t学期\t性别"); 
 		for (j = 1; j <= 9; j++)
 		{
 			//		count = courses[k++] - 1;
@@ -734,7 +742,6 @@ void print_stu_all()//打印所有学生成绩
 void update_stu_id_name()//更新某一个同学成绩 
 {
 	system("cls");
-	int i;
 	int flag2 = 0;
 	stu *t;//记录找到学生的节点
 	FILE *fp = NULL;
@@ -884,10 +891,9 @@ void serch_stu()//查找某一个同学成绩
 	system("cls");
 	FILE *fp = NULL;
 	long long id;
-	int i;
 	stu *t = NULL;//记录找到学生的节点
 	char name[20];
-	stu *ptr, *temp;
+	stu *ptr;
 	int flag;
 	h = creat_list();
 	ptr = h;
@@ -995,8 +1001,6 @@ void delete_stu()//删除同学信息
 {
 	system("cls");
 	stu *ptr, *q;
-	stu t;
-	int i;
 	long long id;
 	char name[20];
 	FILE *fp = NULL;
@@ -1112,8 +1116,7 @@ int sort_selete()
 	gotoxy(46, 7); printf("2、按总分从高到低排序");
 	gotoxy(46, 9); printf("3、按课程成绩从高到底排序");
 	gotoxy(46, 11); printf("请输入左边序号选择功能:");
-	int count_id[15] = { 1,2,3,4,5,6,7,8,9,10,11,12 };
-	int count;//储存课程的序号 
+	int count_id[15] = { 1,2,3,4,5,6,7,8,9,10,11,12 }; 
 	int q = 0;
 	int k = 1;
 	scanf("%d", &selete);
@@ -1152,7 +1155,7 @@ void sort_stu_id()//冒泡排序
 {
 	system("cls");
 	stu *q, *p, *tail;
-	stu *t, *m;
+	stu *t;
 	FILE *fp = NULL;
 	stu *run;
 	tail = NULL;
@@ -1223,7 +1226,7 @@ void sort_stu_sub()
 		else break;
 	}
 	stu *q, *p, *tail;
-	stu *t, *m;
+	stu *t;
 	tail = NULL;
 	h = creat_list();
 	while (h->next != tail)
@@ -1275,7 +1278,7 @@ void sort_stu_sum()
 	stu *run;
 	system("cls");
 	stu *q, *p, *tail;
-	stu *t, *m;
+	stu *t;
 	tail = NULL;
 	h = creat_list();
 	while (h->next != tail)
